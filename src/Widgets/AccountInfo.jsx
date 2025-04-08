@@ -16,17 +16,17 @@ export default function AccountInfo() {
   return (
     <div>
       <Greetings>Hi, {user.login}</Greetings>
-      <Button_s color="danger" variant="solid" onClick={logout}>
+      <StyledButton color="danger" variant="solid" onClick={logout}>
         Sign out
-      </Button_s>
+      </StyledButton>
     </div>
   );
 }
 
 const Greetings = styled.strong`
-  color: black;
+  color: #ffffff;
 `;
 
-const Button_s = styled(Button)`
+const StyledButton = styled(Button)`
   margin: 0 20px;
 `;

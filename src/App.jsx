@@ -1,29 +1,21 @@
 import React from "react";
-import { Flex, Layout, Menu } from "antd";
-import Auth from "./Widgets/Auth";
-import "./App.css";
+import { Layout, Menu } from "antd";
 import styled from "styled-components";
-import { Routes, Route, useNavigate, Navigate } from "react-router";
+import Auth from "./Widgets/Auth";
+import { Routes, Route, useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 import CoursesPage from "./Widgets/Courses/CoursesPage";
 import StudentsPage from "./Widgets/Students/StudentsPage";
-import Sider from "antd/es/layout/Sider";
 
-const { Header, Content } = Layout;
+const { Header, Content, Sider } = Layout;
 
 export default function App() {
   const user = useSelector((state) => state.currentUser);
   const navigate = useNavigate();
 
   const items = [
-    {
-      key: "courses",
-      label: "Courses",
-    },
-    {
-      key: "students",
-      label: "Students",
-    },
+    { key: "courses", label: "Courses" },
+    { key: "students", label: "Students" },
   ];
 
   const handleMenuClick = ({ key }) => {
@@ -31,43 +23,60 @@ export default function App() {
   };
 
   return (
-    <>
-      <Layout>
-        <HeaderStyled>
-          <Auth />
-        </HeaderStyled>
-      </Layout>
-      <Layout>
-        <Sider width="20%">
-          {user.isAuth && (
-            <Menu
-              onClick={handleMenuClick}
-              style={{ width: 256 }}
-              defaultSelectedKeys={["1"]}
-              defaultOpenKeys={["courses"]}
+    <StyledLayout>
+      <StyledHeader isAuth={user.isAuth}>
+        <Auth />
+      </StyledHeader>
+      <StyledLayout>
+        {user.isAuth && (
+          <StyledSider>
+            <StyledMenu
               mode="inline"
               items={items}
+              onClick={handleMenuClick}
+              defaultSelectedKeys={["courses"]}
             />
-          )}
-        </Sider>
-        <Content>
+          </StyledSider>
+        )}
+        <StyledContent>
           {!user.isAuth && <p>You need to sign in</p>}
           {user.isAuth && (
-            <>
-              <Routes>
-                <Route path="/courses" element={<CoursesPage />} />
-                <Route path="/students" element={<StudentsPage />} />
-              </Routes>
-            </>
+            <Routes>
+              <Route path="/courses" element={<CoursesPage />} />
+              <Route path="/students" element={<StudentsPage />} />
+            </Routes>
           )}
-        </Content>
-      </Layout>
-    </>
+        </StyledContent>
+      </StyledLayout>
+    </StyledLayout>
   );
 }
 
-const HeaderStyled = styled(Header)`
+const StyledLayout = styled(Layout)`
+  min-height: 100vh;
+`;
+
+const StyledHeader = styled(Header)`
+  background-color: #375979;
   color: white;
-  min-height: 200px;
-  background-color: #dfdfdf;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: ${(props) => (props.isAuth ? "auto" : "300px")};
+`;
+
+const StyledSider = styled(Sider)`
+  background-color: #f0f2f5;
+`;
+
+const StyledMenu = styled(Menu)`
+  height: 100%;
+  border-right: 1px solid #e8e8e8;
+`;
+
+const StyledContent = styled(Content)`
+  padding: 20px;
+  background-color: #fff;
+  min-height: calc(100vh - 64px);
 `;

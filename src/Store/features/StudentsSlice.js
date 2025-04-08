@@ -1,11 +1,19 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 
-const initialState = { data: [] };
+export const studentsAdapter = createEntityAdapter();
+
+const initialState = studentsAdapter.getInitialState();
 
 const StudentsSlice = createSlice({
   name: "students",
   initialState,
-  reducers: {},
+  reducers: {
+    addStudent: studentsAdapter.addOne,
+    editStudent: studentsAdapter.upsertOne,
+    deleteStudent: studentsAdapter.removeOne,
+  },
 });
+
+export const { addStudent, editStudent, deleteStudent } = StudentsSlice.actions;
 
 export default StudentsSlice.reducer;

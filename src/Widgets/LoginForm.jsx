@@ -11,7 +11,7 @@ export default function LoginForm() {
   };
 
   return (
-    <Form_s
+    <StyledForm
       name="basic"
       labelCol={{ span: 8 }}
       wrapperCol={{ span: 16 }}
@@ -26,7 +26,7 @@ export default function LoginForm() {
         name="username"
         rules={[{ required: true, message: "Please input your username!" }]}
       >
-        <Input />
+        <StyledInput />
       </Form.Item>
 
       <Form.Item
@@ -34,18 +34,72 @@ export default function LoginForm() {
         name="password"
         rules={[{ required: true, message: "Please input your password!" }]}
       >
-        <Input.Password />
+        <StyledPassword />
       </Form.Item>
 
       <Form.Item label={null}>
-        <Button type="primary" htmlType="submit">
+        <StyledButton type="primary" htmlType="submit">
           Submit
-        </Button>
+        </StyledButton>
       </Form.Item>
-    </Form_s>
+    </StyledForm>
   );
 }
 
-const Form_s = styled(Form)`
-  margin-top: 10px;
+const StyledForm = styled(Form)`
+  padding: 30px;
+  max-width: 400px;
+  margin: 50px auto;
+  text-align: center;
+
+  h3 {
+    font-size: 24px;
+    color: #ffffff;
+    margin-bottom: 20px;
+    text-align: center;
+    width: 100%;
+  }
+
+  .ant-form-item-label > label {
+    color: white; 
+  }
+`;
+
+const StyledInput = styled(Input)`
+  color: #000000; 
+  background-color: #ffffff; 
+  border: 1px solid #1890ff;
+
+  &:hover,
+  &:focus {
+    border-color: #40a9ff;
+    box-shadow: 0 0 5px rgba(24, 144, 255, 0.5);
+  }
+`;
+
+const StyledPassword = styled(Input.Password)`
+  color: #000000; 
+  background-color: #ffffff; 
+  border: 1px solid #1890ff;
+
+  &:hover,
+  &:focus {
+    border-color: #40a9ff;
+    box-shadow: 0 0 5px rgba(24, 144, 255, 0.5);
+  }
+
+  input {
+    color: white; 
+  }
+`;
+
+const StyledButton = styled(Button)`
+  background-color: #1890ff;
+  color: #fff;
+  border: none;
+  width: 100%;
+
+  &:hover {
+    background-color: #40a9ff;
+  }
 `;

@@ -1,70 +1,108 @@
-import { Button, Form, Input } from "antd";
-import TextArea from "antd/es/input/TextArea";
 import React from "react";
+import { Form, Input, InputNumber, Button, DatePicker } from "antd";
+import TextArea from "antd/es/input/TextArea";
 import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
 import { addItem, editItem } from "../../Store/features/CoursesSlice";
 import { selectById } from "../../Store/selectors/coursesSelectors";
+import dayjs from "dayjs";
+import styled from "styled-components";
 
 export default function CourseForm({ onSave, courseId }) {
   const dispatch = useDispatch();
-
   const currentCourse = useSelector((state) => selectById(state, courseId));
 
   const handleCourseSaveNew = (values) => {
-    console.log(values);
     const id = Date.now();
-    dispatch(addItem({ ...values, id }));
+    const formattedValues = {
+      ...values,
+      courseStart: values.courseStart ? values.courseStart.toISOString() : null,
+    };
+    dispatch(addItem({ ...formattedValues, id }));
     onSave();
   };
 
   const handleCourseSaveEdit = (values) => {
-    dispatch(editItem({ ...values, id: courseId }));
+    const formattedValues = {
+      ...values,
+      courseStart: values.courseStart ? values.courseStart.toISOString() : null,
+    };
+    dispatch(editItem({ ...formattedValues, id: courseId }));
     onSave();
   };
 
   return (
-    <div>
-      <Form_s
-        name="course"
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
-        style={{ maxWidth: 600 }}
-        onFinish={!courseId ? handleCourseSaveNew : handleCourseSaveEdit}
-        autoComplete="off"
+    <StyledForm
+      name="course"
+      labelCol={{ span: 8 }}
+      wrapperCol={{ span: 16 }}
+      onFinish={!courseId ? handleCourseSaveNew : handleCourseSaveEdit}
+      initialValues={
+        currentCourse
+          ? {
+              ...currentCourse,
+              courseStart: currentCourse.courseStart
+                ? dayjs(currentCourse.courseStart)
+                : null,
+            }
+          : { lessonCount: 0 }
+      }
+    >
+      <Form.Item
+        label="Course Name"
+        name="name"
+        rules={[{ required: true, message: "Please input the course name!" }]}
       >
-        <h3>Create Course Form</h3>
+        <Input />
+      </Form.Item>
 
-        <Form.Item
-          label="Name"
-          name="name"
-          initialValue={courseId && currentCourse.name}
-          rules={[
-            { required: true, message: "Please input your course Title!" },
-          ]}
-        >
-          <Input />
-        </Form.Item>
+      <Form.Item
+        label="Description"
+        name="description"
+        rules={[{ required: true, message: "Please input the description!" }]}
+      >
+        <TextArea />
+      </Form.Item>
 
-        <Form.Item
-          label="Description"
-          name="description"
-          initialValue={courseId && currentCourse.description}
-          rules={[
-            { required: false, message: "Please input your course Title!" },
-          ]}
-        >
-          <TextArea />
-        </Form.Item>
+      <Form.Item
+        label="Lesson Count"
+        name="lessonCount"
+        rules={[{ required: true, message: "Please input the lesson count!" }]}
+      >
+        <InputNumber min={1} />
+      </Form.Item>
 
-        <Button type="primary" htmlType="submit">
+      <Form.Item
+        label="Course Start"
+        name="courseStart"
+        rules={[{ required: true, message: "Please select the start date!" }]}
+      >
+        <DatePicker />
+      </Form.Item>
+
+      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+        <StyledButton type="primary" htmlType="submit">
           Save
-        </Button>
-      </Form_s>
-    </div>
+        </StyledButton>
+      </Form.Item>
+    </StyledForm>
   );
 }
 
-const Form_s = styled(Form)`
-  color: white;
+const StyledForm = styled(Form)`
+  padding: 20px;
+  width: 60%; 
+  max-width: 100%; 
+ 
+  box-sizing: border-box; 
+`;
+
+const StyledButton = styled(Button)`
+  background-color: #1890ff;
+  color: #fff;
+  border: none;
+  width: 100%;
+
+  &:hover {
+    background-color: #40a9ff;
+  }
 `;
